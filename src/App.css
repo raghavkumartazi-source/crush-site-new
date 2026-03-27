@@ -1,38 +1,160 @@
-.App {
-  text-align: center;
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* BACKGROUND */
+.container {
+  height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+
+  background: linear-gradient(
+    135deg,
+    #000000,
+    #1a1a1a,
+    #d4af37,
+    #ffb6c1,
+    #000000
+  );
+
+  background-size: 400% 400%;
+  animation: bgFlow 8s ease infinite;
 }
 
-.App-link {
-  color: #61dafb;
+@keyframes bgFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-@keyframes App-logo-spin {
+/* CARD (MORE SOLID FOR VISIBILITY) */
+.card {
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(25px);
+  padding: 50px 45px;          /* more padding */
+  border-radius: 25px;
+  text-align: center;
+  color: #f5f5f5;
+  max-width: 460px;
+  width: 90%;
+
+  animation: pageFade 0.5s ease;
+}
+
+@keyframes pageFade {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* TITLE (CLEAR + BRIGHT) */
+.title {
+  font-size: 30px; /* bigger */
+  font-weight: 700;
+  color: #ffd700; /* gold for visibility */
+}
+
+/* TEXT */
+p {
+  margin: 16px 0;              /* more breathing space */
+  line-height: 1.85;           /* smoother reading */
+  font-size: 19px;
+  color: #eaeaea;
+  letter-spacing: 0.3px;       /* subtle premium feel */
+}
+
+/* FADE TEXT */
+.fade-text {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* CURSOR */
+.cursor {
+  margin-left: 5px;
+  color: #ff69b4; /* pink cursor */
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+}
+
+/* BUTTONS */
+.buttons {
+  margin-top: 25px;
+}
+
+button {
+  padding: 14px 28px;
+  border-radius: 25px;
+  border: none;
+  margin: 12px;
+  cursor: pointer;
+
+  font-size: 16px;             /* slightly bigger */
+  letter-spacing: 0.5px;
+
+  background: linear-gradient(135deg, #ffd700, #ff69b4);
+  color: white;
+  font-weight: 600;
+
+  box-shadow: 0 0 15px rgba(255, 182, 193, 0.5);
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 25px rgba(255, 105, 180, 0.8);
+}
+.card p:first-of-type {
+  margin-top: 0;
+}
+
+.card p:last-of-type {
+  margin-bottom: 5px;
+}
+/* 🔥 Highlight strong */
+.highlight {
+  color: #ffd700;
+  font-weight: 600;
+}
+
+/* ✨ Soft highlight */
+.highlight-soft {
+  color: #ffb6c1;
+}
+
+/* subtle text animation */
+.fade-text {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
