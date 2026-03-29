@@ -4,7 +4,7 @@ import "./App.css";
 const pages = [
   {
     text: [
-      "Hey Poonam Koranga 👋",
+      "Hey Poonam 👋",
       "This might be the most effort",
       "someone has put just to say hi 😄"
     ],
@@ -89,7 +89,7 @@ export default function App() {
   };
 
   const openInsta = () => {
-    window.open("https://instagram.com/rishu.iitbhu", "_blank");
+    window.open("https://instagram.com/raghav.iitbhu", "_blank");
   };
 
   // 🔥 Highlight words
