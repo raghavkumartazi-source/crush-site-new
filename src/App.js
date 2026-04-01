@@ -8,11 +8,11 @@ const pages = [
       "This might be the most effort",
       "someone has put just to say hi 😄"
     ],
-    button: "Okay… I’m curious 👀"
+    button: "Okay… I'm curious 👀"
   },
   {
     text: [
-      "I think I’ve seen you around campus a few times…",
+      "I think I've seen you around campus a few times…",
       "Not sure if you noticed me though 😄"
     ],
     button: "Wait… really?"
@@ -26,25 +26,32 @@ const pages = [
   },
   {
     text: [
-      "I’ll be honest… this might sound a little funny 😅",
+      "I'll be honest… this might sound a little funny 😅",
       "I even ended up giving interviews like KY PR and Technex PR…",
       "Somewhere I thought we might finally cross paths.",
-      "But yeah… that didn’t really happen 😄"
+      "But yeah… that didn't really happen 😄"
     ],
-    button: "That’s actually funny 😄"
+    button: "That's actually funny 😄"
   },
   {
     text: [
       "I did try once to start the conversation…",
       "on your birthday 😄",
       "But mid sems were just around the corner,",
-      "so it didn’t really turn into one."
+      "so it didn't really turn into one."
     ],
     button: "Ohh okay…"
   },
   {
     text: [
-      "Waiting clearly wasn’t working…",
+      "Prove you're human 🤖",
+      "Click the button if you laughed at least once so far 😄"
+    ],
+    button: "Fine… I did 😄"
+  },
+  {
+    text: [
+      "Waiting clearly wasn't working…",
       "So I decided to do something about it.",
       "So here I am."
     ],
@@ -59,11 +66,20 @@ const pages = [
   },
   {
     text: [
-      "I won’t make this complicated…",
+      "I won't make this complicated…",
       "I just wanted to talk to you :)",
       "and maybe get to know you better."
     ],
-    buttons: ["Let’s talk 😊", "Maybe later 😄"]
+    button: "Go on… 😊"
+  },
+  {
+    text: [
+      "I built a whole website just to talk to you…",
+      "The least you can do is one coffee ☕ 😄",
+      "No pressure though —",
+      "I'm just a guy who tried his best 😊"
+    ],
+    buttons: ["Okay fine, let's go ☕", "Maybe later 😄"]
   }
 ];
 
@@ -92,7 +108,6 @@ export default function App() {
     window.open("https://instagram.com/raghav.iitbhu", "_blank");
   };
 
-  // 🔥 Highlight words
   const highlightText = (text) => {
     return text
       .replace(/hi/gi, '<span class="highlight">hi</span>')
@@ -103,7 +118,6 @@ export default function App() {
   return (
     <div className="container">
       <div className="card">
-
         {pages[page].text.slice(0, visibleLines).map((line, i) => (
           <p
             key={i}
@@ -118,7 +132,6 @@ export default function App() {
               <button onClick={openInsta}>
                 {pages[page].buttons[0]}
               </button>
-
               <button onClick={openInsta}>
                 {pages[page].buttons[1]}
               </button>
@@ -129,7 +142,6 @@ export default function App() {
             </button>
           )}
         </div>
-
       </div>
     </div>
   );
