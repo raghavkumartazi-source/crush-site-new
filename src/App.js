@@ -47,7 +47,7 @@ const pages = [
       "Prove you're human 🤖",
       "Click the button if you laughed at least once so far 😄"
     ],
-    button: "Fine… I did 😄"
+    button: "Okay fine… maybe once 😄"
   },
   {
     text: [
@@ -56,6 +56,23 @@ const pages = [
       "So here I am."
     ],
     button: "Alright, go on…"
+  },
+  {
+    text: [
+      "I don't usually do stuff like this…",
+      "but then again,",
+      "I don't usually see someone and think —",
+      "\"okay she seems different\" 😊"
+    ],
+    button: "Okay… go on 👀"
+  },
+  {
+    text: [
+      "I could've just slid into the DMs…",
+      "but that felt too easy 😄",
+      "You deserved something more interesting."
+    ],
+    button: "Okay that's a little sweet… 🥹"
   },
   {
     text: [
@@ -75,9 +92,9 @@ const pages = [
   {
     text: [
       "I built a whole website just to talk to you…",
-      "The least you can do is one coffee ☕ 😄",
+      "The least you can do is one cafe date ☕ 😄",
       "No pressure though —",
-      "I'm just a guy who tried his best 😊"
+      "I'm just a guy who thought you were worth it 😊"
     ],
     buttons: ["Okay fine, let's go ☕", "Maybe later 😄"]
   }
@@ -86,6 +103,7 @@ const pages = [
 export default function App() {
   const [page, setPage] = useState(0);
   const [visibleLines, setVisibleLines] = useState(0);
+  const [cardKey, setCardKey] = useState(0);
 
   useEffect(() => {
     setVisibleLines(0);
@@ -95,13 +113,16 @@ export default function App() {
         if (prev < pages[page].text.length) return prev + 1;
         return prev;
       });
-    }, 250);
+    }, 260);
 
     return () => clearInterval(timer);
   }, [page]);
 
   const nextPage = () => {
-    setPage((prev) => (prev < pages.length - 1 ? prev + 1 : prev));
+    if (page < pages.length - 1) {
+      setPage((prev) => prev + 1);
+      setCardKey((prev) => prev + 1);
+    }
   };
 
   const openInsta = () => {
@@ -115,32 +136,61 @@ export default function App() {
       .replace(/you/gi, '<span class="highlight-soft">you</span>');
   };
 
-  return (
-    <div className="container">
-      <div className="card">
-        {pages[page].text.slice(0, visibleLines).map((line, i) => (
-          <p
-            key={i}
-            className={i === 0 ? "title fade-text" : "fade-text"}
-            dangerouslySetInnerHTML={{ __html: highlightText(line) }}
-          />
-        ))}
+  const isLastPage = page === pages.length - 1;
 
-        <div className="buttons">
-          {pages[page].buttons ? (
-            <>
-              <button onClick={openInsta}>
-                {pages[page].buttons[0]}
+  return (
+    <div className="bg">
+      <div className="orb orb1"></div>
+      <div className="orb orb2"></div>
+      <div className="orb orb3"></div>
+      <div className="noise"></div>
+
+      {/* PARTICLES */}
+      <div className="particles">
+        {Array.from({ length: 15 }).map((_, i) => (
+          <div key={i} className="particle"></div>
+        ))}
+      </div>
+
+      <div className="container">
+        <div className="card" key={cardKey}>
+
+          {pages[page].text.slice(0, visibleLines).map((line, i) => (
+            <p
+              key={i}
+              className={i === 0 ? "title fade-text" : "fade-text"}
+              dangerouslySetInnerHTML={{ __html: highlightText(line) }}
+            />
+          ))}
+
+          <div className="divider"></div>
+
+          <div className="buttons">
+            {pages[page].buttons ? (
+              <>
+                <button
+                  className={`primary ${isLastPage ? "heartbeat" : ""}`}
+                  onClick={openInsta}
+                >
+                  {pages[page].buttons[0]}
+                </button>
+                <button onClick={openInsta}>
+                  {pages[page].buttons[1]}
+                </button>
+              </>
+            ) : (
+              <button className="primary" onClick={nextPage}>
+                {pages[page].button}
               </button>
-              <button onClick={openInsta}>
-                {pages[page].buttons[1]}
-              </button>
-            </>
-          ) : (
-            <button onClick={nextPage}>
-              {pages[page].button}
-            </button>
-          )}
+            )}
+          </div>
+
+          <div className="page-dots">
+            {pages.map((_, i) => (
+              <div key={i} className={`dot ${i === page ? "active" : ""}`}></div>
+            ))}
+          </div>
+
         </div>
       </div>
     </div>
