@@ -43,13 +43,6 @@ const pages = [
     button: "Ohh okay…"
   },
   {
-     text: [
-      "At this point…",
-      "I hope this made you smile at least once 😄"
-    ],
-    button: "Okay… maybe it did 😄"
-  },
-  {
     text: [
       "Waiting clearly wasn't working…",
       "So I decided to do something about it.",
@@ -80,6 +73,13 @@ const pages = [
       "Nice to finally meet you :)"
     ],
     button: "Hi 😄"
+  },
+  {
+     text: [
+      "At this point…",
+      "I hope this made you smile at least once 😄"
+    ],
+    button: "Okay… maybe it did 😄"
   },
   {
     text: [
