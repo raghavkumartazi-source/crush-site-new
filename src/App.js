@@ -90,14 +90,13 @@ const pages = [
     button: "Go on… 😊"
   },
   {
-    text: [
-      "Some people send flowers…",
-      "some people build websites 😄",
-      "No pressure though —",
-      "just thought it would be nice to talk 😊",
-      "So… cafeteria? ☕"
-    ],
-    buttons: ["Okay fine, let's go ☕", "Maybe later 😄"]
+  text: [
+    "If you made it till here…",
+    "I think I've earned at least one conversation 😄",
+    "Just wanted to finally say hi in person 😊",
+    "So… cafeteria sometime? ☕"
+  ],
+  buttons: ["Okay, fair enough ☕", "Maybe later 😄"]
   }
 ];
 
