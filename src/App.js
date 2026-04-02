@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
 
@@ -235,7 +236,8 @@ export default function App() {
 
   const isLastPage = page === pages.length - 1;
 
-  return (
+return (
+  <>
     <div className="bg">
       <canvas ref={canvasRef} className="star-canvas" />
       <div className="orb orb1" />
@@ -295,5 +297,8 @@ export default function App() {
         </div>
       </div>
     </div>
-  );
-}
+
+    {/* 👇 ADD THIS LINE */}
+    <Analytics />
+  </>
+);
