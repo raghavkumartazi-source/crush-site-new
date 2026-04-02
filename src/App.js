@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 
 const pages = [
@@ -43,11 +43,11 @@ const pages = [
     button: "Ohh okay…"
   },
   {
-    text: [
-      "Prove you're human 🤖",
-      "Click the button if you laughed at least once so far 😄"
+     text: [
+      "At this point…",
+      "I hope this made you smile at least once 😄"
     ],
-    button: "Okay fine… maybe once 😄"
+    button: "Okay… maybe it did 😄"
   },
   {
     text: [
@@ -91,10 +91,11 @@ const pages = [
   },
   {
     text: [
-      "I built a whole website just to talk to you…",
-      "The least you can do is one cafe date ☕ 😄",
+      "Some people send flowers…",
+      "some people build websites 😄",
       "No pressure though —",
-      "I'm just a guy who thought you were worth it 😊"
+      "just thought it would be nice to talk 😊",
+      "So… cafeteria? ☕"
     ],
     buttons: ["Okay fine, let's go ☕", "Maybe later 😄"]
   }
@@ -104,24 +105,103 @@ export default function App() {
   const [page, setPage] = useState(0);
   const [visibleLines, setVisibleLines] = useState(0);
   const [cardKey, setCardKey] = useState(0);
+  const canvasRef = useRef(null);
+  const starsRef = useRef([]);
+  const shootingStarsRef = useRef([]);
+  const animRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      starsRef.current = Array.from({ length: 350 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.2,
+        o: Math.random() * 0.6 + 0.1,
+        twinkle: Math.random() * Math.PI * 2
+      }));
+    };
+
+    const spawnShootingStar = () => {
+      shootingStarsRef.current.push({
+        x: Math.random() * canvas.width * 0.6,
+        y: Math.random() * canvas.height * 0.4,
+        len: Math.random() * 120 + 80,
+        speed: Math.random() * 8 + 6,
+        opacity: 1
+      });
+    };
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      starsRef.current.forEach(s => {
+        s.twinkle += 0.02;
+        const o = s.o * (0.7 + 0.3 * Math.sin(s.twinkle));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${o})`;
+        ctx.fill();
+      });
+
+      shootingStarsRef.current = shootingStarsRef.current.filter(ss => ss.opacity > 0);
+      shootingStarsRef.current.forEach(ss => {
+        ss.x += ss.speed;
+        ss.y += ss.speed * 0.4;
+        ss.opacity -= 0.018;
+        const grad = ctx.createLinearGradient(
+          ss.x - ss.len, ss.y - ss.len * 0.4,
+          ss.x, ss.y
+        );
+        grad.addColorStop(0, `rgba(255,255,255,0)`);
+        grad.addColorStop(0.6, `rgba(255,220,180,${ss.opacity * 0.6})`);
+        grad.addColorStop(1, `rgba(255,255,255,${ss.opacity})`);
+        ctx.beginPath();
+        ctx.moveTo(ss.x - ss.len, ss.y - ss.len * 0.4);
+        ctx.lineTo(ss.x, ss.y);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+
+      animRef.current = requestAnimationFrame(draw);
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+    const shootInterval = setInterval(spawnShootingStar, 2000);
+    setTimeout(spawnShootingStar, 500);
+    setTimeout(spawnShootingStar, 1500);
+    setTimeout(spawnShootingStar, 2500);
+    draw();
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      clearInterval(shootInterval);
+      cancelAnimationFrame(animRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     setVisibleLines(0);
-
     const timer = setInterval(() => {
-      setVisibleLines((prev) => {
+      setVisibleLines(prev => {
         if (prev < pages[page].text.length) return prev + 1;
+        clearInterval(timer);
         return prev;
       });
-    }, 260);
-
+    }, 270);
     return () => clearInterval(timer);
   }, [page]);
 
   const nextPage = () => {
     if (page < pages.length - 1) {
-      setPage((prev) => prev + 1);
-      setCardKey((prev) => prev + 1);
+      setPage(prev => prev + 1);
+      setCardKey(prev => prev + 1);
     }
   };
 
@@ -136,61 +216,83 @@ export default function App() {
       .replace(/you/gi, '<span class="highlight-soft">you</span>');
   };
 
+  const addRipple = (e) => {
+    const btn = e.currentTarget;
+    const rect = btn.getBoundingClientRect();
+    const ripple = document.createElement("span");
+    const size = Math.max(btn.offsetWidth, btn.offsetHeight);
+    ripple.className = "ripple";
+    ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size / 2}px;top:${e.clientY - rect.top - size / 2}px;`;
+    btn.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+  };
+
+  const handleMouseMove = (e) => {
+    const btn = e.currentTarget;
+    const rect = btn.getBoundingClientRect();
+    btn.style.setProperty("--mx", ((e.clientX - rect.left) / rect.width * 100) + "%");
+    btn.style.setProperty("--my", ((e.clientY - rect.top) / rect.height * 100) + "%");
+  };
+
   const isLastPage = page === pages.length - 1;
 
   return (
     <div className="bg">
-      <div className="orb orb1"></div>
-      <div className="orb orb2"></div>
-      <div className="orb orb3"></div>
-      <div className="noise"></div>
-
-      {/* PARTICLES */}
-      <div className="particles">
-        {Array.from({ length: 15 }).map((_, i) => (
-          <div key={i} className="particle"></div>
-        ))}
-      </div>
+      <canvas ref={canvasRef} className="star-canvas" />
+      <div className="orb orb1" />
+      <div className="orb orb2" />
+      <div className="orb orb3" />
 
       <div className="container">
         <div className="card" key={cardKey}>
+          <div className="card-inner">
 
-          {pages[page].text.slice(0, visibleLines).map((line, i) => (
-            <p
-              key={i}
-              className={i === 0 ? "title fade-text" : "fade-text"}
-              dangerouslySetInnerHTML={{ __html: highlightText(line) }}
-            />
-          ))}
-
-          <div className="divider"></div>
-
-          <div className="buttons">
-            {pages[page].buttons ? (
-              <>
-                <button
-                  className={`primary ${isLastPage ? "heartbeat" : ""}`}
-                  onClick={openInsta}
-                >
-                  {pages[page].buttons[0]}
-                </button>
-                <button onClick={openInsta}>
-                  {pages[page].buttons[1]}
-                </button>
-              </>
-            ) : (
-              <button className="primary" onClick={nextPage}>
-                {pages[page].button}
-              </button>
-            )}
-          </div>
-
-          <div className="page-dots">
-            {pages.map((_, i) => (
-              <div key={i} className={`dot ${i === page ? "active" : ""}`}></div>
+            {pages[page].text.slice(0, visibleLines).map((line, i) => (
+              <p
+                key={i}
+                className={i === 0 ? "line title" : "line"}
+                style={{ animationDelay: `${i * 0.1}s` }}
+                dangerouslySetInnerHTML={{ __html: highlightText(line) }}
+              />
             ))}
-          </div>
 
+            <div className="divider" />
+
+            <div className="buttons">
+              {pages[page].buttons ? (
+                <>
+                  <button
+                    className={`primary ${isLastPage ? "heartbeat" : ""}`}
+                    onClick={(e) => { addRipple(e); setTimeout(openInsta, 300); }}
+                    onMouseMove={handleMouseMove}
+                  >
+                    {pages[page].buttons[0]}
+                  </button>
+                  <button
+                    onClick={(e) => { addRipple(e); setTimeout(openInsta, 300); }}
+                    onMouseMove={handleMouseMove}
+                  >
+                    {pages[page].buttons[1]}
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="primary"
+                  onClick={(e) => { addRipple(e); setTimeout(nextPage, 200); }}
+                  onMouseMove={handleMouseMove}
+                >
+                  {pages[page].button}
+                </button>
+              )}
+            </div>
+
+            <div className="dots">
+              {pages.map((_, i) => (
+                <div key={i} className={`dot ${i === page ? "active" : ""}`} />
+              ))}
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
